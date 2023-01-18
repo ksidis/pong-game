@@ -1,6 +1,5 @@
-# Import and initialize the pygame library
 import pygame
-from pygame.constants import KEYDOWN, K_ESCAPE, QUIT, K_UP, K_DOWN, K_w, K_s
+from pygame.constants import K_ESCAPE, QUIT, K_UP, K_DOWN, K_w, K_s
 
 from assets.ball import Ball
 from assets.paddle import Paddle
