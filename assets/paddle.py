@@ -11,6 +11,7 @@ class Paddle:
         self.y = y
         self.width = width
         self.height = height
+        self.middle_y = y + height / 2
 
     def draw(self):
         pygame.draw.rect(self.screen, WHITE, (self.x, self.y, self.width, self.height))
@@ -20,3 +21,5 @@ class Paddle:
             self.y -= PADDLE_VELOCITY
         else:
             self.y += PADDLE_VELOCITY
+
+        self.middle_y = self.y + self.height / 2
