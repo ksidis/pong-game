@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 
 
 SCREEN_HEIGHT = 600
@@ -22,3 +23,8 @@ BLACK = (0, 0, 0)
 class Point:
     x: int
     y: int
+
+class Player(Enum):
+    HUMAN = 1
+    CPU = 2
+    AI = 3

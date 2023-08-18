@@ -1,6 +1,7 @@
 import pygame
 from pygame.constants import K_ESCAPE, QUIT, K_UP, K_DOWN, K_w, K_s
 
+from agent import *
 from assets.ball import Ball
 from assets.paddle import Paddle
 
@@ -9,7 +10,7 @@ from constants import *
 
 class Pong:
 
-    def __init__(self):
+    def __init__(self, l_player: BaseAgent=HumanAgent(), r_player: BaseAgent=HumanAgent()):
         pygame.init()
         self.FONT = pygame.font.SysFont("comics", 50)
 
@@ -18,20 +19,23 @@ class Pong:
         pygame.display.set_caption('Pong')
         self.clock = pygame.time.Clock()
         self.running = False
+        self.l_player = l_player
+        self.r_player = r_player
 
+        self.reset()
+
+    def reset(self):
         self.right_score = 0
         self.left_score = 0
+        self.frame_iteration = 0
 
         self.l_paddle = Paddle(self.screen, 10,
-                               (SCREEN_HEIGHT // 2) - (PADDLE_HEIGHT/2),
+                               (SCREEN_HEIGHT // 2) - (PADDLE_HEIGHT / 2),
                                PADDLE_WIDTH, PADDLE_HEIGHT)
         self.r_paddle = Paddle(self.screen,
                                SCREEN_WIDTH -
                                (10 + PADDLE_WIDTH), (SCREEN_HEIGHT // 2) - (PADDLE_HEIGHT // 2),
                                PADDLE_WIDTH, PADDLE_HEIGHT)
-        self.ball = Ball(self.screen)
-
-    def new_round(self):
         self.ball = Ball(self.screen)
 
     def start(self):
@@ -54,15 +58,18 @@ class Pong:
                     self.running = False
                     break
             keys = pygame.key.get_pressed()
+            self.l_player.tick(self)
+            self.r_player.tick(self)
             self.handle_keys(keys, self.l_paddle, self.r_paddle)
+
             self.handle_collision(self.ball, self.l_paddle, self.r_paddle)
 
             if self.ball.position.x < 0:
                 self.right_score += 1
-                self.new_round()
+                self.reset()
             if self.ball.position.x > SCREEN_WIDTH:
                 self.left_score += 1
-                self.new_round()
+                self.reset()
 
             self.clock.tick(FPS)
 
@@ -70,14 +77,17 @@ class Pong:
         pygame.quit()
 
     def handle_keys(self, keys, l_paddle, r_paddle):
-        if keys[K_w] and l_paddle.y - PADDLE_VELOCITY >= 0:
-            l_paddle.move(up=True)
-        if keys[K_s] and l_paddle.y + PADDLE_VELOCITY + l_paddle.height <= SCREEN_HEIGHT:
-            l_paddle.move(up=False)
-        if keys[K_UP] and r_paddle.y - PADDLE_VELOCITY >= 0:
-            r_paddle.move(up=True)
-        if keys[K_DOWN] and r_paddle.y + PADDLE_VELOCITY + r_paddle.height <= SCREEN_HEIGHT:
-            r_paddle.move(up=False)
+        if self.l_player.agent_type == Player.HUMAN:
+            if keys[K_w] and l_paddle.y - PADDLE_VELOCITY >= 0:
+                l_paddle.move(up=True)
+            if keys[K_s] and l_paddle.y + PADDLE_VELOCITY + l_paddle.height <= SCREEN_HEIGHT:
+                l_paddle.move(up=False)
+
+        if self.r_player.agent_type == Player.HUMAN:
+            if keys[K_UP] and r_paddle.y - PADDLE_VELOCITY >= 0:
+                r_paddle.move(up=True)
+            if keys[K_DOWN] and r_paddle.y + PADDLE_VELOCITY + r_paddle.height <= SCREEN_HEIGHT:
+                r_paddle.move(up=False)
 
         if keys[K_ESCAPE]:
             self.running = False
@@ -133,5 +143,6 @@ class Pong:
 
 
 if __name__ == '__main__':
-    game = Pong()
+    r_player = CpuAgent()
+    game = Pong(r_player=r_player)
     game.start()
