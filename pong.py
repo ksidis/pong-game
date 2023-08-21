@@ -10,7 +10,7 @@ from constants import *
 
 class Pong:
 
-    def __init__(self, l_player: BaseAgent=HumanAgent(), r_player: BaseAgent=HumanAgent()):
+    def __init__(self, l_player: BaseAgent=None, r_player: BaseAgent=None):
         pygame.init()
         self.FONT = pygame.font.SysFont("comics", 50)
 
@@ -19,8 +19,8 @@ class Pong:
         pygame.display.set_caption('Pong')
         self.clock = pygame.time.Clock()
         self.running = False
-        self.l_player = l_player
-        self.r_player = r_player
+        self.l_player = l_player if l_player else HumanAgent()
+        self.r_player = r_player if r_player else HumanAgent()
 
         self.reset()
 

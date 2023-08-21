@@ -11,8 +11,8 @@ class Ball:
         self.screen = screen
         self.position: Point = Point(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.radius: int = BALL_RADIUS
-        self.x_vel: int = random.choice((-1, 1))* BALL_MAX_VELOCITY
-        self.y_vel: int = 0
+        self.x_vel: int = random.choice((-1, 1)) * BALL_MAX_VELOCITY
+        self.y_vel: int = random.choice((-1, 1)) * BALL_MAX_VELOCITY / 4
 
     def draw(self):
         circle(self.screen, WHITE, (self.position.x, self.position.y), self.radius)
